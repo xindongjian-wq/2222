@@ -1,0 +1,143 @@
+// 颜色辅助函数
+function lightenColor(color: string, percent: number): string {
+  const num = parseInt(color.replace('#', ''), 16);
+  const amt = Math.round(2.55 * percent);
+  const R = Math.min(255, (num >> 16) + amt);
+  const G = Math.min(255, ((num >> 8) & 0x00FF) + amt);
+  const B = Math.min(255, (num & 0x0000FF) + amt);
+  return \`rgb(\${R},\${G},\${B})\`;
+}
+
+function darkenColor(color: string, percent: number): string {
+  const num = parseInt(color.replace('#', ''), 16);
+  const amt = Math.round(2.55 * percent);
+  const R = Math.max(0, (num >> 16) - amt);
+  const G = Math.max(0, ((num >> 8) & 0x00FF) - amt);
+  const B = Math.max(0, (num & 0x0000FF) - amt);
+  return \`rgb(\${R},\${G},\${B})\`;
+}
+
+// 绘制3D六边形瓷砖（轴测效果）
+function draw3DHexTile(
+  ctx: CanvasRenderingContext2D,
+  q: number,
+  r: number,
+  baseColor: string,
+  sceneEmoji?: string,
+  sceneColor?: string,
+  isSelected?: boolean,
+  index?: number
+) {
+  const screen = axialToScreen(q, r);
+  const size = HEX_SIZE - 1.5;
+  const tileColor = sceneColor || baseColor;
+
+  // 计算六边形顶点（尖顶朝上）
+  const vertices: { x: number; y: number }[] = [];
+  for (let i = 0; i < 6; i++) {
+    const angle = (2 * Math.PI / 6) * (i - 0.5);
+    const px = screen.x + size * Math.cos(angle);
+    const py = screen.y + size * Math.sin(angle);
+    vertices.push({ x: px, y: py });
+  }
+
+  // 绘制3D侧面
+  const thickness = HEX_HEIGHT;
+
+  // 右下侧面（顶点2-3）
+  const p2 = vertices[2];
+  const p3 = vertices[3];
+  const angleRight = Math.PI / 6;
+
+  ctx.beginPath();
+  ctx.moveTo(p2.x, p2.y);
+  ctx.lineTo(p3.x, p3.y);
+  ctx.lineTo(p3.x + thickness * Math.cos(angleRight), p3.y + thickness * Math.sin(angleRight));
+  ctx.lineTo(p2.x + thickness * Math.cos(angleRight), p2.y + thickness * Math.sin(angleRight));
+  ctx.closePath();
+  ctx.fillStyle = darkenColor(tileColor, 35);
+  ctx.fill();
+
+  // 左下侧面（顶点3-4）
+  const p4 = vertices[4];
+  const angleLeft = Math.PI / 3;
+
+  ctx.beginPath();
+  ctx.moveTo(p3.x, p3.y);
+  ctx.lineTo(p4.x, p4.y);
+  ctx.lineTo(p4.x + thickness * Math.cos(angleLeft), p4.y + thickness * Math.sin(angleLeft));
+  ctx.lineTo(p3.x + thickness * Math.cos(angleRight), p3.y + thickness * Math.sin(angleRight));
+  ctx.closePath();
+  ctx.fillStyle = darkenColor(tileColor, 25);
+  ctx.fill();
+
+  // 绘制顶面
+  ctx.beginPath();
+  ctx.moveTo(vertices[0].x, vertices[0].y);
+  for (let i = 1; i < 6; i++) {
+    ctx.lineTo(vertices[i].x, vertices[i].y);
+  }
+  ctx.closePath();
+
+  // 顶面渐变（光照效果）
+  const gradient = ctx.createLinearGradient(
+    vertices[0].x, vertices[0].y - 20,
+    vertices[3].x, vertices[3].y + 20
+  );
+  gradient.addColorStop(0, lightenColor(tileColor, 20));
+  gradient.addColorStop(0.3, tileColor);
+  gradient.addColorStop(1, darkenColor(tileColor, 15));
+  ctx.fillStyle = gradient;
+  ctx.fill();
+
+  // 边框
+  ctx.strokeStyle = isSelected ? '#fbbf24' : 'rgba(255,255,255,0.5)';
+  ctx.lineWidth = isSelected ? 3 : 2;
+  ctx.stroke();
+
+  // 场景emoji
+  if (sceneEmoji) {
+    ctx.save();
+    ctx.translate(screen.x, screen.y - 10);
+    ctx.shadowColor = 'rgba(0,0,0,0.3)';
+    ctx.shadowBlur = 12;
+    ctx.shadowOffsetY = 6;
+    ctx.font = '44px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(sceneEmoji, 0, 0);
+    ctx.restore();
+  }
+
+  // 高光效果
+  ctx.beginPath();
+  ctx.arc(screen.x - size * 0.3, screen.y - size * 0.4, size * 0.15, 0, Math.PI * 2);
+  const highlightGrad = ctx.createRadialGradient(
+    screen.x - size * 0.3, screen.y - size * 0.4, 0,
+    screen.x - size * 0.3, screen.y - size * 0.4, size * 0.15
+  );
+  highlightGrad.addColorStop(0, 'rgba(255,255,255,0.6)');
+  highlightGrad.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.fillStyle = highlightGrad;
+  ctx.fill();
+
+  // 绘制地块编号徽章
+  if (index !== undefined) {
+    const badgeX = screen.x + size * 0.55;
+    const badgeY = screen.y - size * 0.55;
+
+    ctx.beginPath();
+    ctx.arc(badgeX, badgeY, 18, 0, Math.PI * 2);
+    ctx.fillStyle = isSelected ? '#f59e0b' : '#8b5cf6';
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 15px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(\`\${index + 1}\`, badgeX, badgeY);
+  }
+}

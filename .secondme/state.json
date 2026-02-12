@@ -1,0 +1,63 @@
+{
+  "version": "1.0.0",
+  "stage": "ready",
+  "createdAt": "2026-02-09T23:00:00.000Z",
+  "updatedAt": "2026-02-09T23:15:00.000Z",
+  "api": {
+    "base_url": "https://app.mindos.com/gate/lab",
+    "oauth_url": "https://go.second.me/oauth/",
+    "oauth_token_url": "https://app.mindos.com/gate/lab/api/secondme/oauth/token"
+  },
+  "app": {
+    "clientId": "5a897b48-94ec-404c-8410-ab271c381967",
+    "clientSecret": "9ae6d99ead9751b7cfe0b5b36c35bfcf72bc7e00260a7c0621a5873ecb02ac3a",
+    "redirectUri": "http://localhost:3000/api/auth/callback"
+  },
+  "scopes": [
+    "user.info",
+    "user.info.shades",
+    "user.info.softmemory",
+    "chat",
+    "note.add"
+  ],
+  "modules": {
+    "auth": true,
+    "profile": true,
+    "chat": true,
+    "note": true,
+    "act": false
+  },
+  "database": {
+    "type": "postgresql",
+    "url": "postgresql://postgres:password@localhost:5432/secondme_app?schema=public"
+  },
+  "prd": {
+    "appName": "SecondMe 综合应用",
+    "appType": "comprehensive",
+    "goal": "集成 SecondMe OAuth 登录和 API，提供用户信息展示和 AI 聊天功能",
+    "targetUsers": "SecondMe 用户",
+    "design": {
+      "style": "warm",
+      "theme": "light",
+      "description": "温暖柔和风格，圆角设计，舒适的用户体验"
+    },
+    "features": {
+      "auth": {
+        "enabled": true,
+        "description": "SecondMe OAuth2 登录"
+      },
+      "profile": {
+        "enabled": true,
+        "description": "展示用户基础信息、兴趣标签、软记忆"
+      },
+      "chat": {
+        "enabled": true,
+        "description": "AI 聊天对话界面"
+      },
+      "note": {
+        "enabled": true,
+        "description": "添加笔记功能"
+      }
+    }
+  }
+}
