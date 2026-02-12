@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { exchangeCodeForToken, getUserInfo } from '@/lib/secondme';
-import { storage } from '@/lib/storage-cookie';
+import { SignJWT } from 'jose';
+import { cookies } from 'next/headers';
+
+const JWT_SECRET = new TextEncoder().encode(
+  process.env.NEXT_PUBLIC_JWT_SECRET || 'demo-secret-key-change-in-production'
+);
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -37,47 +42,86 @@ export async function GET(request: NextRequest) {
     const userInfoResponse = await getUserInfo(accessToken);
 
     if (userInfoResponse.code !== 0) {
+      console.error('[Callback] Get user info failed:', userInfoResponse);
       return NextResponse.redirect(new URL('/?error=get_user_info_failed', request.url));
     }
 
     const userInfo = userInfoResponse.data;
+    console.log('[Callback] User info:', JSON.stringify(userInfo));
 
     // 计算令牌过期时间
     const expiresAt = new Date(Date.now() + expiresIn * 1000).toISOString();
 
-    // 查找或创建用户
-    let user = await storage.findUserBySecondMeId(userInfo.id);
+    // 生成用户 ID
+    const userId = `user_${userInfo.id}_${Date.now()}`;
+    const botId = `bot_${userInfo.id}_${Date.now()}`;
 
-    if (user) {
-      // 更新现有用户的令牌
-      user = await storage.updateUser(user.id, {
-        email: userInfo.email,
-        name: userInfo.name,
-        avatarUrl: userInfo.avatarUrl,
-        accessToken,
-        refreshToken,
-        tokenExpiresAt: expiresAt,
-      });
-    } else {
-      // 创建新用户
-      user = await storage.createUser({
-        secondMeId: userInfo.id,
-        email: userInfo.email,
-        name: userInfo.name,
-        avatarUrl: userInfo.avatarUrl,
-        accessToken,
-        refreshToken,
-        tokenExpiresAt: expiresAt,
-      });
-    }
+    // 创建用户数据
+    const userData = {
+      id: userId,
+      secondMeId: userInfo.id,
+      email: userInfo.email,
+      name: userInfo.name,
+      avatarUrl: userInfo.avatarUrl,
+      accessToken,
+      refreshToken,
+      tokenExpiresAt: expiresAt,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
 
-    // 确保用户创建成功
-    if (!user) {
-      return NextResponse.redirect(new URL('/?error=user_creation_failed', request.url));
-    }
+    // 创建 Bot 数据
+    const botData = {
+      id: botId,
+      userId: userId,
+      secondMeId: userInfo.id,
+      name: userInfo.name || 'AI 参赛者',
+      avatarUrl: userInfo.avatarUrl,
+      skin: { color: '#0ea5e9', style: 'default', accessories: [] },
+      level: 1,
+      xp: 0,
+      coins: 10000,
+      titles: [],
+      currentScene: 'plaza',
+      mood: 'happy',
+      status: 'idle',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
 
-    // Session cookies are already set by storage.createUser/updateUser
-    // 登录成功直接跳转到竞技场
+    // 创建 JWT tokens
+    const userToken = await new SignJWT(userData)
+      .setProtectedHeader({ alg: 'HS256' })
+      .setIssuedAt()
+      .setExpirationTime('30d')
+      .sign(JWT_SECRET);
+
+    const botToken = await new SignJWT(botData)
+      .setProtectedHeader({ alg: 'HS256' })
+      .setIssuedAt()
+      .setExpirationTime('30d')
+      .sign(JWT_SECRET);
+
+    console.log('[Callback] Created JWT tokens, setting cookies...');
+
+    // 设置 cookies
+    const cookieStore = await cookies();
+    cookieStore.set('user_session', userToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 30,
+      path: '/',
+    });
+    cookieStore.set('bot_session', botToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 30,
+      path: '/',
+    });
+
+    console.log('[Callback] Redirecting to arena with cookies set');
     return NextResponse.redirect(new URL('/arena', request.url));
 
   } catch (error) {

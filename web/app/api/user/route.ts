@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { storage } from '@/lib/storage-cookie';
 import { cookies } from 'next/headers';
 import { jwtVerify } from 'jose';
 
@@ -10,8 +9,13 @@ const JWT_SECRET = new TextEncoder().encode(
 export async function GET(request: NextRequest) {
   const cookieStore = await cookies();
   const userSession = cookieStore.get('user_session')?.value;
+  const botSession = cookieStore.get('bot_session')?.value;
+
+  console.log('[User API] user_session exists:', !!userSession);
+  console.log('[User API] bot_session exists:', !!botSession);
 
   if (!userSession) {
+    console.log('[User API] No user_session cookie found');
     return NextResponse.json({ code: -1, error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -20,11 +24,44 @@ export async function GET(request: NextRequest) {
     const { payload } = await jwtVerify(userSession, JWT_SECRET);
     const user = payload as any;
 
+    console.log('[User API] Decoded user:', user.id, user.name);
+
     if (!user) {
       return NextResponse.json({ code: -1, error: 'Invalid session' }, { status: 401 });
     }
 
-    const bot = await storage.findBotByUserId(user.id);
+    // Decode bot session if exists
+    let bot = null;
+    if (botSession) {
+      try {
+        const botPayload = await jwtVerify(botSession, JWT_SECRET);
+        bot = botPayload.payload as any;
+        console.log('[User API] Decoded bot:', bot.id);
+      } catch (e) {
+        console.log('[User API] Failed to decode bot session:', e);
+      }
+    }
+
+    // 如果没有 bot，创建默认的
+    if (!bot) {
+      bot = {
+        id: `bot_${user.secondMeId}`,
+        userId: user.id,
+        secondMeId: user.secondMeId,
+        name: user.name || 'AI 参赛者',
+        avatarUrl: user.avatarUrl,
+        skin: { color: '#0ea5e9', style: 'default', accessories: [] },
+        level: 1,
+        xp: 0,
+        coins: 10000,
+        titles: [],
+        currentScene: 'plaza',
+        mood: 'happy',
+        status: 'idle',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+    }
 
     return NextResponse.json({
       code: 0,
@@ -51,11 +88,11 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Get user error:', error);
+    console.error('[User API] Error:', error);
     return NextResponse.json({
       code: -1,
-      error: 'Internal server error',
+      error: 'Session verification failed',
       details: error instanceof Error ? error.message : String(error)
-    }, { status: 500 });
+    }, { status: 401 });
   }
 }
