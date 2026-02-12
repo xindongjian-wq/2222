@@ -77,8 +77,8 @@ export async function GET(request: NextRequest) {
     }
 
     // Session cookies are already set by storage.createUser/updateUser
-    // 重定向到主页
-    return NextResponse.redirect(new URL('/', request.url));
+    // 登录成功直接跳转到竞技场
+    return NextResponse.redirect(new URL('/arena', request.url));
 
   } catch (error) {
     console.error('OAuth callback error:', error);
