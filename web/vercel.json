@@ -2,6 +2,9 @@
   "buildCommand": "npm run build",
   "outputDirectory": ".next",
   "framework": "nextjs",
+  "cleanUrls": {
+    "without": "www."
+  },
   "env": {
     "SECONDME_BASE_URL": "https://app.mindos.com/gate/lab",
     "NEXT_PUBLIC_SECONDME_OAUTH_URL": "https://go.second.me/oauth/"
