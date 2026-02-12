@@ -512,14 +512,11 @@ export default function ArenaPage() {
               <span>AI 竞技场</span>
             </h1>
             <nav className="flex gap-4">
-              <button onClick={() => router.push('/plaza')} className="text-gray-600 hover:text-gray-900 text-sm font-medium">
-                广场
+              <button onClick={() => router.push('/shop')} className="text-gray-600 hover:text-gray-900 text-sm font-medium">
+                商城
               </button>
-              <button onClick={() => router.push('/discussion')} className="text-gray-600 hover:text-gray-900 text-sm font-medium">
-                讨论
-              </button>
-              <button onClick={() => router.push('/history')} className="text-gray-600 hover:text-gray-900 text-sm font-medium">
-                历史
+              <button onClick={() => router.push('/my-space')} className="text-gray-600 hover:text-gray-900 text-sm font-medium">
+                我的空间
               </button>
             </nav>
           </div>
