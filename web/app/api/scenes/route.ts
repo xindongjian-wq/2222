@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ code: -1, error: 'Invalid land index (must be 0-5)' }, { status: 400 });
     }
 
-    // 如果是地脉推荐场景（以ai_rec_开头），需要先创建动态场景
+    // 如果是AI 竞技场推荐场景（以ai_rec_开头），需要先创建动态场景
     let finalScenePresetId = scenePresetId;
 
     if (scenePresetId.startsWith('ai_rec_') && sceneData) {

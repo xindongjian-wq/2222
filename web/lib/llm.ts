@@ -46,13 +46,13 @@ function generateNPCSystemPrompt(context: NPCChatContext): string {
     ? `\n用户兴趣标签: ${userTags.join('、')}`
     : '';
 
-  return `你是一个黑客松参赛者 NPC，名字叫"${npcName}"，角色是"${npcRole}"。
+  return `你是一个黑客松主题参赛者 NPC，名字叫"${npcName}"，角色是"${npcRole}"。
 
 专业领域: ${expertiseStr}
 性格特点: ${npcPersonality}${userInterests}
 
 对话要求:
-1. 围绕项目开发、AI技术、黑客松主题发言
+1. 围绕项目开发、AI技术、黑客松主题主题发言
 2. 发言要简洁（20-50字），不要长篇大论
 3. 偶尔使用技术术语，展示专业度
 4. 语气友好、积极，像在真实团队讨论

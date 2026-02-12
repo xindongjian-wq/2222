@@ -48,7 +48,7 @@ interface UserScene {
   updatedAt: string;
 }
 
-// 地脉推荐场景
+// AI 竞技场推荐场景
 interface RecommendedScene {
   id: string;
   name: string;
@@ -237,7 +237,7 @@ export default function MySpacePage() {
   const [showSceneModal, setShowSceneModal] = useState(false);
   const [hoveredLandIndex, setHoveredLandIndex] = useState<number | null>(null);
 
-  // 地脉推荐场景状态
+  // AI 竞技场推荐场景状态
   const [showRecommendModal, setShowRecommendModal] = useState(false);
   const [recommendations, setRecommendations] = useState<RecommendedScene[]>([]);
   const [isLoadingRecommendations, setIsLoadingRecommendations] = useState(false);
@@ -322,7 +322,7 @@ export default function MySpacePage() {
     }
   };
 
-  // 加载地脉推荐场景
+  // 加载AI 竞技场推荐场景
   const loadRecommendations = async (landIndex: number) => {
     setIsLoadingRecommendations(true);
     try {
@@ -349,7 +349,7 @@ export default function MySpacePage() {
         scenePresetId,
       };
 
-      // 如果是地脉推荐场景，传递场景数据
+      // 如果是AI 竞技场推荐场景，传递场景数据
       if (isRecommended && sceneData) {
         requestBody.sceneData = sceneData;
       }
@@ -475,7 +475,7 @@ export default function MySpacePage() {
       if (Math.sqrt((clickX - screen.x) ** 2 + (clickY - screen.y) ** 2) < HEX_SIZE * 0.85) {
         if (canEdit) {
           setSelectedLandIndex(index);
-          // 先加载地脉推荐，然后显示推荐弹窗
+          // 先加载AI 竞技场推荐，然后显示推荐弹窗
           loadRecommendations(index);
           setShowRecommendModal(true);
         } else {
@@ -568,7 +568,7 @@ export default function MySpacePage() {
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
-              <span className="font-medium">地脉</span>
+              <span className="font-medium">AI 竞技场</span>
             </button>
             <h1 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
               {viewUser ? `查看 ${viewUser.name || '用户'} 的空间` : '我的空间'}
@@ -630,7 +630,7 @@ export default function MySpacePage() {
         </div>
       </main>
 
-      {/* 地脉推荐场景弹窗 - 三选一 */}
+      {/* AI 竞技场推荐场景弹窗 - 三选一 */}
       {showRecommendModal && selectedLandIndex !== null && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[60]" onClick={() => setShowRecommendModal(false)}>
           <div className="bg-white rounded-3xl p-8 w-[520px] max-w-[90vw] shadow-2xl" onClick={(e) => e.stopPropagation()}>

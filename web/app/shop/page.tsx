@@ -211,7 +211,7 @@ export default function ShopPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </div>
-            <h1 className="text-xl font-bold text-gray-800">地脉</h1>
+            <h1 className="text-xl font-bold text-gray-800">AI 竞技场</h1>
           </button>
 
           {/* 金币显示 */}

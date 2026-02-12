@@ -341,7 +341,7 @@ export interface NPCIdea {
   createdAt: string;
 }
 
-// 黑客松知识（700条）
+// 黑客松主题知识（700条）
 export interface NPCKnowledge {
   id: string;
   botId: string;
@@ -1334,13 +1334,13 @@ export const storage = {
     return newIdea;
   },
 
-  // 获取黑客松知识
+  // 获取黑客松主题知识
   async getHackathonKnowledge(botId: string): Promise<NPCKnowledge[]> {
     const allKnowledge = await readJSON<NPCKnowledge[]>(NPC_KNOWLEDGE_FILE, []);
     return allKnowledge.filter(k => k.botId === botId);
   },
 
-  // 添加黑客松知识
+  // 添加黑客松主题知识
   async addHackathonKnowledge(knowledge: Omit<NPCKnowledge, 'id' | 'createdAt'>): Promise<NPCKnowledge> {
     const knowledgeList = await readJSON<NPCKnowledge[]>(NPC_KNOWLEDGE_FILE, []);
     const newKnowledge: NPCKnowledge = {

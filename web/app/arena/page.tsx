@@ -509,7 +509,7 @@ export default function ArenaPage() {
           <div className="flex items-center gap-6">
             <h1 className="text-xl font-bold text-gray-800 flex items-center gap-2">
               <span className="text-xl">🏟</span>
-              <span>地脉</span>
+              <span>AI 竞技场</span>
             </h1>
             <nav className="flex gap-4">
               <button onClick={() => router.push('/plaza')} className="text-gray-600 hover:text-gray-900 text-sm font-medium">

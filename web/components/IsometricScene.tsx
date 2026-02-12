@@ -844,7 +844,7 @@ export default function IsometricScene({ onCharacterClick, chatMessages, userBot
       {/* 顶部信息 */}
       <div className="absolute top-4 left-4 flex gap-3">
         <div className="bg-white/90 backdrop-blur rounded-lg px-3 py-1.5 border border-gray-200 shadow-sm">
-          <span className="text-gray-600 text-sm">地脉</span>
+          <span className="text-gray-600 text-sm">AI 竞技场</span>
         </div>
         <div className="bg-white/90 backdrop-blur rounded-lg px-3 py-1.5 border border-gray-200 shadow-sm">
           <span className="text-gray-600 text-sm">人数:</span>
