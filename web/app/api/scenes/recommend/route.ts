@@ -19,7 +19,7 @@ interface ScenePreset {
   description: string;
 }
 
-// AI推荐的场景
+// 地脉推荐的场景
 interface RecommendedScene {
   id: string;
   name: string;
@@ -72,7 +72,7 @@ function buildRecommendationPrompt(userInfo: any, shades: any, memories: any[]) 
   const recentMemories = memories?.slice(0, 5) || [];
   const memoryTags = [...new Set(recentMemories.flatMap(m => m.tags || []))];
 
-  return `你是一个AI空间场景设计师。根据以下用户信息，为用户推荐3个最适合的场景。
+  return `你是一个地脉AI空间场景设计师。根据以下用户信息，为用户推荐3个最适合的场景。
 
 用户信息：
 - 姓名：${userName}
@@ -152,7 +152,7 @@ async function generateAIRecommendations(prompt: string): Promise<RecommendedSce
   }
 }
 
-// 将AI推荐转换为场景预设格式
+// 将地脉推荐转换为场景预设格式
 function convertToScenePresets(recommendations: any[]): RecommendedScene[] {
   const categoryColors: Record<string, { color: string; baseColor: string }> = {
     sports: { color: '#f97316', baseColor: '#fed7aa' },

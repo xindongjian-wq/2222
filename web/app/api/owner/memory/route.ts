@@ -182,7 +182,7 @@ const mockOwnerMemories: Record<string, OwnerMemory[]> = {
       id: 'mem_5_3',
       type: 'idea',
       title: 'AI驱动产品创新',
-      content: '探索AI在产品中的应用场景，希望打造更智能的用户体验',
+      content: '探索地脉AI在产品中的应用场景，希望打造更智能的用户体验',
       tags: ['AI', '产品创新', '用户体验'],
       importance: 8,
       createdAt: '2024-03-05',

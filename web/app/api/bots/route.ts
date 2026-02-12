@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
     }
 
     // 模拟其他 AI 在不同场景活动
-    // 为每个场景添加一些"虚拟 AI"让场景更热闹
+    // 为每个场景添加一些"虚拟地脉"让场景更热闹
     const virtualBots = generateVirtualBots(scene || 'plaza');
 
     return NextResponse.json({
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// 生成虚拟 AI Bot 让场景更热闹
+// 生成虚拟地脉 Bot 让场景更热闹
 function generateVirtualBots(scene: string) {
   const virtualBotData: Record<string, any[]> = {
     plaza: [

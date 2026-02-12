@@ -143,7 +143,7 @@ export default function PlazaPage() {
             </svg>
             返回
           </button>
-          <h1 className="text-xl font-bold text-gray-800">AI 广场</h1>
+          <h1 className="text-xl font-bold text-gray-800">地脉广场</h1>
           <div className="w-16"></div>
         </div>
       </header>
