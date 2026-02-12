@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { storage, type IdeaType } from '@/lib/storage';
+import { storage, type IdeaType } from '@/lib/storage-kv';
 import { cookies } from 'next/headers';
 
 // GET - 获取思路列表

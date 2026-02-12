@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { storage } from '@/lib/storage';
+import { storage } from '@/lib/storage-kv';
 import { NPC_PERSONAS } from '@/data/npc-personas';
 
 // GET - 获取NPC列表

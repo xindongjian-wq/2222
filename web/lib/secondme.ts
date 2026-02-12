@@ -59,7 +59,22 @@ export async function exchangeCodeForToken(code: string): Promise<SecondMeTokenR
     throw new Error(`Token exchange failed: ${response.statusText} - ${text}`);
   }
 
-  return response.json();
+  const result = await response.json();
+
+  // 检查 SecondMe API 错误码
+  if (result.code !== 0) {
+    console.error('[OAuth] API Error:', result.code);
+    const errorMessages: Record<string, string> = {
+      'oauth2.token.expired': '访问令牌已过期，请重新登录',
+      'oauth2.scope.insufficient': '权限不足，请检查应用权限配置',
+      'oauth2.code.invalid': '授权码无效',
+      'oauth2.redirect_uri.mismatch': '重定向地址不匹配',
+    };
+    const errorMessage = errorMessages[result.code] || `认证失败 (错误码: ${result.code})`;
+    throw new Error(errorMessage);
+  }
+
+  return result;
 }
 
 /**

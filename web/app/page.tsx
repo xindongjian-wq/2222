@@ -59,11 +59,13 @@ export default function HomePage() {
   };
 
   const handleLogin = () => {
-    const clientId = process.env.NEXT_PUBLIC_SECONDME_CLIENT_ID || '';
-    const redirectUri = process.env.NEXT_PUBLIC_SECONDME_REDIRECT_URI || 'http://localhost:3000/api/auth/callback';
+    const clientId = (process.env.NEXT_PUBLIC_SECONDME_CLIENT_ID || '').trim();
+    const redirectUri = (process.env.NEXT_PUBLIC_SECONDME_REDIRECT_URI || 'http://localhost:3000/api/auth/callback').trim();
+    const oauthBaseUrl = (process.env.NEXT_PUBLIC_SECONDME_OAUTH_URL || 'https://go.second.me/oauth/').trim();
     console.log('[Login] Client ID:', clientId);
     console.log('[Login] Redirect URI:', redirectUri);
-    const oauthUrl = `https://go.second.me/oauth/?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code`;
+    console.log('[Login] OAuth Base URL:', oauthBaseUrl);
+    const oauthUrl = `${oauthBaseUrl}?client_id=${encodeURIComponent(clientId)}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code`;
     console.log('[Login] OAuth URL:', oauthUrl);
     window.location.href = oauthUrl;
   };

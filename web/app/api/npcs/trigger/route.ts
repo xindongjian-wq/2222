@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { storage } from '@/lib/storage';
+import { storage } from '@/lib/storage-kv';
 import llmService, { NPCChatContext } from '@/lib/llm';
 
 // POST - 手动触发NPC发言

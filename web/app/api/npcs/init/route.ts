@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { storage } from '@/lib/storage';
+import { storage } from '@/lib/storage-kv';
 import { NPC_PERSONAS } from '@/data/npc-personas';
 
 export async function POST() {

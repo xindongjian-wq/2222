@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { storage } from '@/lib/storage';
+import { storage } from '@/lib/storage-kv';
 import { cookies } from 'next/headers';
 
 // 添加评论

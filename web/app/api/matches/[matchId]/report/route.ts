@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { storage } from '@/lib/storage';
+import { storage } from '@/lib/storage-kv';
 
 // 生成战报
 export async function POST(

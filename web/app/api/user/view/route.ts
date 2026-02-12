@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { storage } from '@/lib/storage';
+import { storage } from '@/lib/storage-kv';
 
 // GET - 获取用户完整信息用于查看其他用户空间
 export async function GET(request: NextRequest) {
