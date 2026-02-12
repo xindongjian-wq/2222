@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { storage } from '@/lib/storage-kv';
+import { storage } from '@/lib/storage-cookie';
 import { cookies } from 'next/headers';
 
 // GET - 获取所有扩展场景预设（300+种）

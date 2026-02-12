@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { storage, type LandType } from '@/lib/storage-kv';
+import { storage, type LandType } from '@/lib/storage-cookie';
 import { cookies } from 'next/headers';
 
 // 土地价格配置

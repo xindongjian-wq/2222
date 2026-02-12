@@ -1,22 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { storage } from '@/lib/storage-kv';
+import { storage } from '@/lib/storage-cookie';
 import { cookies } from 'next/headers';
+import { jwtVerify } from 'jose';
+
+const JWT_SECRET = new TextEncoder().encode(
+  process.env.NEXT_PUBLIC_JWT_SECRET || 'demo-secret-key-change-in-production'
+);
 
 export async function GET(request: NextRequest) {
   const cookieStore = await cookies();
-  const userId = cookieStore.get('user_id')?.value;
+  const userSession = cookieStore.get('user_session')?.value;
 
-  if (!userId) {
+  if (!userSession) {
     return NextResponse.json({ code: -1, error: 'Unauthorized' }, { status: 401 });
   }
 
   try {
-    const user = await storage.findUserById(userId);
+    // Decode JWT to get user data
+    const { payload } = await jwtVerify(userSession, JWT_SECRET);
+    const user = payload as any;
+
     if (!user) {
-      return NextResponse.json({ code: -1, error: 'User not found' }, { status: 404 });
+      return NextResponse.json({ code: -1, error: 'Invalid session' }, { status: 401 });
     }
 
-    const bot = await storage.findBotByUserId(userId);
+    const bot = await storage.findBotByUserId(user.id);
 
     return NextResponse.json({
       code: 0,

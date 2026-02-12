@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { exchangeCodeForToken, getUserInfo } from '@/lib/secondme';
-import { storage } from '@/lib/storage-kv';
-import { cookies } from 'next/headers';
+import { storage } from '@/lib/storage-cookie';
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -77,15 +76,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect(new URL('/?error=user_creation_failed', request.url));
     }
 
-    // 设置会话 cookie
-    const cookieStore = await cookies();
-    cookieStore.set('user_id', user.id, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 30, // 30 天
-    });
-
+    // Session cookies are already set by storage.createUser/updateUser
     // 重定向到主页
     return NextResponse.redirect(new URL('/', request.url));
 
