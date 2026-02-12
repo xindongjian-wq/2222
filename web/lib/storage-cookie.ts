@@ -19,6 +19,10 @@ export interface User {
   accessToken: string;
   refreshToken: string;
   tokenExpiresAt: string;
+  tags?: string[];
+  skills?: string[];
+  hobbies?: string[];
+  bio?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -98,7 +102,7 @@ export const storage = {
     if (!user) return { user: null, bot: null, scenes: [] };
 
     const bot = await this.findBotByUserId(userId);
-    const scenes = [];
+    const scenes: any[] = [];
 
     return { user, bot, scenes };
   },
@@ -108,7 +112,7 @@ export const storage = {
     if (!user) return { user: null, bot: null, scenes: [] };
 
     const bot = await this.findBotByUserId(userId);
-    const scenes = [];
+    const scenes: any[] = [];
 
     return { user, bot, scenes };
   },

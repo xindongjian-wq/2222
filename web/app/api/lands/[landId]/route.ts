@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { storage, type LandType } from '@/lib/storage-cookie';
+import { storage } from '@/lib/storage-cookie';
 import { cookies } from 'next/headers';
 
 // GET - 获取单个土地详情
