@@ -385,7 +385,7 @@ export default function MySpacePage() {
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
-              <span className="font-medium">AI 竞技场</span>
+              <span className="font-medium">地脉</span>
             </button>
             <h1 className="text-xl font-bold text-gray-800">
               {viewUser ? `查看 ${viewUser.name || '用户'} 的空间` : '我的空间'}
